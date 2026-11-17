@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfroPixel</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <div class="entete">
+            <div class="identite">
+                <h1>AFROPIXEL</h1>
+                <h2>LA REFERENCE DANS LA VENTE D'IMAGES DE QUALITE</h2>
+            </div>
+
+            <button id="ouvrir-panier" aria-label="Ouvrir le panier"> <!--Bouton n'est pas le plus adequat-->
+                <img src="images/cart-logo.png" alt="Panier" class="icone-panier">
+                <span id="nombre-articles">0</span>
+            </button>
+
+        </div>
+    </header>
+    
+    <hr><hr><!--A remplacer par border au niveau du CSS-->
+
+    <main>
+        <section id="galerie">
+            <!-- Les images sont generes ici -->
+        </section>
+    </main>
+
+
+    <div id="fond-panier" class="fond-panier">
+        <div class="contenu-panier">
+            <div class="entete-panier">
+                <h2>Mon panier</h2>
+                <button id="fermer-panier">✕</button>
+            </div>
+
+            <div id="liste-panier">
+                <!-- Les articles selectionnes apparaitront ici -->
+            </div>
+
+            <div class="total-panier">
+                <p>
+                    Nombre d'articles :
+                    <strong id="total-quantite">0</strong>
+                </p>
+
+                <p>
+                    Montant total :
+                    <strong id="montant-total">0 CFA</strong>
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AfroPixel - Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>
