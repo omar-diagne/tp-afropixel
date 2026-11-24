@@ -122,37 +122,18 @@ const images = [
 ];
 
 const galerie = document.getElementById("galerie");
-
-const ouvrirPanier = document.getElementById("ouvrir-panier");
-const fermerPanier = document.getElementById("fermer-panier");
-
-const fondPanier = document.getElementById("fond-panier");
-const listePanier = document.getElementById("liste-panier");
-
 const nombreArticles = document.getElementById("nombre-articles");
-const totalQuantite = document.getElementById("total-quantite");
-const montantTotal = document.getElementById("montant-total");
 
 function formaterPrix(prix) {
     return prix.toLocaleString("fr-FR") + " CFA";
 }
 
-// Preferer la boucle for(image of images) {} pour ce traitement
 function afficherImages() {
     galerie.innerHTML = "";
 
-    for (let i = 0; i < images.length; i++) {
-        const image = images[i];
-        /* Le prof demande de preferer cette methode car l'autre est fastidieuse
-        let htmlCard = `
-            <article class="carte">
-                <button onclick="modifierQuantite(${image.id}, "ajouter")">+</button>
-            </article>
-        `;
-        */
-
+    for (const image of images) {
         const carte = document.createElement("article");
-        carte.classList.add("carte"); // Utiliser carte.className = "carte"; ainsi que pour les autres
+        carte.className = "carte";
 
         const photo = document.createElement("img");
         photo.src = image.url;
@@ -162,13 +143,13 @@ function afficherImages() {
         titre.textContent = image.nom;
 
         const prix = document.createElement("p");
-        prix.classList.add("prix");
+        prix.className = "prix";
         prix.textContent = formaterPrix(image.prix);
 
+        // Conteneur regroupant les boutons + et - de chaque carte
         const commandes = document.createElement("div");
-        commandes.classList.add("commandes"); // Permet de creer un conteneur regroupant les boutons + et - de chaque commande
+        commandes.className = "commandes";
 
-        // Bouton d'ajout d'elements
         const boutonPlus = document.createElement("button");
         boutonPlus.textContent = "+";
         boutonPlus.addEventListener("click", function() {
@@ -176,13 +157,11 @@ function afficherImages() {
         });
 
         const quantite = document.createElement("span");
-        quantite.classList.add("quantite");
+        quantite.className = "quantite";
         quantite.textContent = image.quantite;
 
-        // Bouton de retrtait d'elements
         const boutonMoins = document.createElement("button");
         boutonMoins.textContent = "-";
-
         boutonMoins.addEventListener("click", function() {
             modifierQuantite(image.id, "retirer");
         });
@@ -201,131 +180,29 @@ function afficherImages() {
 }
 
 function modifierQuantite(id, action) {
-    for (let i = 0; i < images.length; i++) {
-        if (images[i].id === id) {
+    for (const image of images) {
+        if (image.id === id) {
             if (action === "ajouter") {
-                images[i].quantite++;
-            } else if (action === "retirer" && images[i].quantite > 0) {
-                images[i].quantite--;
+                image.quantite++;
+            } else if (action === "retirer" && image.quantite > 0) {
+                image.quantite--;
             }
             break;
         }
     }
     afficherImages();
-    actualiserPanier();
+    actualiserCompteur();
 }
 
-function actualiserPanier() {
+function actualiserCompteur() {
     let quantiteTotale = 0;
-    let prixTotal = 0;
 
-    for (let i = 0; i < images.length; i++) {
-        quantiteTotale += images[i].quantite;
-
-        prixTotal += images[i].prix * images[i].quantite;
+    for (const image of images) {
+        quantiteTotale += image.quantite;
     }
 
     nombreArticles.textContent = quantiteTotale;
-    totalQuantite.textContent = quantiteTotale;
-    montantTotal.textContent = formaterPrix(prixTotal);
-
-    afficherContenuPanier();
 }
-
-
-function afficherContenuPanier() {
-    listePanier.innerHTML = "";
-
-    let panierVide = true;
-
-    for (let i = 0; i < images.length; i++) {
-        const image = images[i];
-
-        if (image.quantite > 0) {
-            panierVide = false;
-
-            const article = document.createElement("div");
-            article.classList.add("article-panier");
-
-            const photo = document.createElement("img");
-            photo.src = image.url;
-            photo.alt = image.nom;
-
-            const informations = document.createElement("div");
-            informations.classList.add("infos-article");
-
-            const titre = document.createElement("h3");
-            titre.textContent = image.nom;
-
-            const prix = document.createElement("p");
-            prix.textContent = "Prix unitaire : " + formaterPrix(image.prix);
-
-            const quantite = document.createElement("p");
-            quantite.textContent = "Quantité : " + image.quantite;
-
-            const sousTotal = document.createElement("p");
-
-            sousTotal.textContent = "Sous-total : " + formaterPrix(image.prix * image.quantite);
-
-            const commandes = document.createElement("div");
-            commandes.classList.add("commandes");
-
-            const boutonPlus = document.createElement("button");
-            boutonPlus.textContent = "+";
-            boutonPlus.addEventListener("click", function() {
-                modifierQuantite(image.id, "ajouter");
-            });
-
-            const boutonMoins = document.createElement("button");
-            boutonMoins.textContent = "-";
-            boutonMoins.addEventListener("click", function() {
-                modifierQuantite(image.id, "retirer");
-            });
-
-            commandes.appendChild(boutonPlus);
-            commandes.appendChild(boutonMoins);
-
-            informations.appendChild(titre);
-            informations.appendChild(prix);
-            informations.appendChild(quantite);
-            informations.appendChild(sousTotal);
-
-            article.appendChild(photo);
-            article.appendChild(informations);
-            article.appendChild(commandes);
-
-            listePanier.appendChild(article);
-        }
-    }
-
-    if (panierVide) {
-        const message = document.createElement("p");
-
-        message.classList.add("panier-vide");
-        message.textContent = "Votre panier est vide.";
-        listePanier.appendChild(message);
-    }
-}
-
-ouvrirPanier.addEventListener("click", function() {
-    fondPanier.classList.add("actif");
-});
-
-fermerPanier.addEventListener("click", function() {
-    fondPanier.classList.remove("actif");
-});
-
-fondPanier.addEventListener("click", function(event) {
-    if (event.target === fondPanier) {
-        fondPanier.classList.remove("actif");
-    }
-}); // Pour fermer le panier lorsqu'on clique ailleurs.
-
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        fondPanier.classList.remove("actif");
-    }
-}); // Pour fermer le panier lorsqu'on presse sur esc.
 
 afficherImages();
-actualiserPanier();
+actualiserCompteur();
