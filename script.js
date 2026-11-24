@@ -1,4 +1,3 @@
-
 class ImageCard {
     constructor(id, titre, prix, url) {
         this.id = id;
@@ -25,7 +24,6 @@ class ImageCard {
     }
 }
 
-
 class ImageCardList {
     constructor(imageCards) {
         this.imageCards = imageCards;
@@ -33,146 +31,58 @@ class ImageCardList {
 
     render() {
         const galerie = document.getElementById("galerie");
-        galerie.innerHTML = "";
+        let html = "";
 
-        for (let i = 0; i < this.imageCards.length; i++) {
-            galerie.innerHTML += this.imageCards[i].render();
+        for (const carte of this.imageCards) {
+            html += carte.render();
         }
+
+        galerie.innerHTML = html;
     }
 
     modifierQuantite(id, action) {
-        for (let i = 0; i < this.imageCards.length; i++) {
-            const image = this.imageCards[i];
-
+        for (const image of this.imageCards) {
             if (image.id === id) {
                 if (action === "ajouter") {
                     image.quantite++;
                 } else if (action === "retirer" && image.quantite > 0) {
                     image.quantite--;
                 }
-
                 break;
             }
         }
 
         this.render();
-        this.actualiserPanier();
+        this.actualiserCompteur();
     }
 
-    actualiserPanier() {
+    actualiserCompteur() {
         let quantiteTotale = 0;
-        let prixTotal = 0;
 
-        for (let i = 0; i < this.imageCards.length; i++) {
-            const image = this.imageCards[i];
-
+        for (const image of this.imageCards) {
             quantiteTotale += image.quantite;
-            prixTotal += image.prix * image.quantite;
         }
 
         document.getElementById("nombre-articles").textContent = quantiteTotale;
-
-        document.getElementById("total-quantite").textContent = quantiteTotale;
-
-        document.getElementById("montant-total").textContent =
-            prixTotal.toLocaleString("fr-FR") + " CFA";
-
-        this.afficherContenuPanier();
-    }
-
-    afficherContenuPanier() {
-        const listePanier = document.getElementById("liste-panier");
-        listePanier.innerHTML = "";
-
-        let panierVide = true;
-
-        for (let i = 0; i < this.imageCards.length; i++) {
-            const image = this.imageCards[i];
-
-            if (image.quantite > 0) {
-                panierVide = false;
-
-                listePanier.innerHTML += `
-                    <div class="article-panier">
-                        <img src="${image.url}" alt="${image.titre}">
-
-                        <div class="infos-article">
-                            <h3>${image.titre}</h3>
-                            <p>Prix unitaire : ${image.prix.toLocaleString("fr-FR")} CFA</p>
-                            <p>Quantité : ${image.quantite}</p>
-                            <p>Sous-total : ${(image.prix * image.quantite).toLocaleString("fr-FR")} CFA</p>
-                        </div>
-
-                        <div class="commandes">
-                            <button data-action="ajouter" data-id="${image.id}">+</button>
-                            <button data-action="retirer" data-id="${image.id}">-</button>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        if (panierVide) {
-            listePanier.innerHTML = `
-                <p class="panier-vide">Votre panier est vide.</p>
-            `;
-        }
     }
 }
-
 
 class AfroPixel {
     constructor(imageCards) {
         this.galerie = new ImageCardList(imageCards);
-
-        this.fondPanier = document.getElementById("fond-panier");
-        this.boutonOuvrir = document.getElementById("ouvrir-panier");
-        this.boutonFermer = document.getElementById("fermer-panier");
-
         this.conteneurGalerie = document.getElementById("galerie");
-        this.conteneurPanier = document.getElementById("liste-panier");
     }
 
     initialiser() {
         this.galerie.render();
-        this.galerie.actualiserPanier();
-
+        this.galerie.actualiserCompteur();
         this.gererEvenements();
     }
 
     gererEvenements() {
-        // Événements des boutons de la galerie
+        // Boutons + et - de la galerie
         this.conteneurGalerie.addEventListener("click", (event) => {
             this.gererModificationQuantite(event);
-        });
-
-        // Événements des boutons du panier
-        this.conteneurPanier.addEventListener("click", (event) => {
-            this.gererModificationQuantite(event);
-        });
-
-        // Ouvrir le panier
-        this.boutonOuvrir.addEventListener("click", () => {
-            this.ouvrirPanier();
-        });
-
-        // Fermer le panier
-        this.boutonFermer.addEventListener("click", () => {
-            this.fermerPanier();
-        });
-
-        // Fermer en cliquant sur le fond
-        this.fondPanier.addEventListener("click", (event) => {
-            if (event.target === this.fondPanier) {
-                this.fermerPanier();
-            }
-        });
-
-        // Fermer avec la touche Échap
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape") {
-                this.fermerPanier();
-            }
         });
     }
 
@@ -186,16 +96,7 @@ class AfroPixel {
             this.galerie.modifierQuantite(id, action);
         }
     }
-
-    ouvrirPanier() {
-        this.fondPanier.classList.add("actif");
-    }
-
-    fermerPanier() {
-        this.fondPanier.classList.remove("actif");
-    }
 }
-
 
 // Liste des images
 const images = [
@@ -215,7 +116,6 @@ const images = [
     new ImageCard(26, "Administrateur", 12000, "images/wallpaper-9.jpg"),
     new ImageCard(7, "Cybercriminalité", 12000, "images/wallpaper-10.jfif")
 ];
-
 
 // Lancement de l'application
 const application = new AfroPixel(images);
