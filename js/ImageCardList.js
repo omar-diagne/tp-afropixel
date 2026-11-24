@@ -27,16 +27,5 @@ export class ImageCardList {
         }
 
         this.render();
-        this.actualiserCompteur();
-    }
-
-    actualiserCompteur() {
-        let quantiteTotale = 0;
-
-        for (const image of this.imageCards) {
-            quantiteTotale += image.quantite;
-        }
-
-        document.getElementById("nombre-articles").textContent = quantiteTotale;
     }
 }

@@ -17,10 +17,10 @@
                 <h2>LA REFERENCE DANS LA VENTE D'IMAGES DE QUALITE</h2>
             </div>
 
-            <div id="zone-panier">
+            <button id="ouvrir-panier" aria-label="Ouvrir le panier">
                 <img src="images/cart-logo.png" alt="Panier" class="icone-panier">
                 <span id="nombre-articles">0</span>
-            </div>
+            </button>
         </div>
     </header>
 
@@ -29,6 +29,31 @@
             <!-- Les images sont générées ici -->
         </section>
     </main>
+
+    <div id="fond-panier" class="fond-panier">
+        <div class="contenu-panier">
+            <div class="entete-panier">
+                <h2>Mon panier</h2>
+                <button id="fermer-panier">✕</button>
+            </div>
+
+            <div id="liste-panier">
+                <!-- Les articles sélectionnés apparaîtront ici -->
+            </div>
+
+            <div class="total-panier">
+                <p>
+                    Nombre d'articles :
+                    <strong id="total-quantite">0</strong>
+                </p>
+
+                <p>
+                    Montant total :
+                    <strong id="montant-total">0 CFA</strong>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2026 AfroPixel - Tous droits réservés.</p>
