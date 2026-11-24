@@ -1,331 +1,222 @@
-const images = [
-    {
-        id: 1,
-        nom: "Femme noire",
-        prix: 25000,
-        categorie: "art",
-        url: "images/blackness.jpg",
-        quantite: 0
-    },
-    {
-        id: 2,
-        nom: "Girls in Tech",
-        prix: 18000,
-        categorie: "technologie",
-        url: "images/deux.jpg",
-        quantite: 0
-    },
-    {
-        id: 3,
-        nom: "Femme musulmane",
-        prix: 27500,
-        categorie: "religion",
-        url: "images/muslima.jpg",
-        quantite: 0
-    },
-    {
-        id: 4,
-        nom: "Jigeen ci Tech",
-        prix: 20000,
-        categorie: "technologie",
-        url: "images/trois.jpg",
-        quantite: 0
-    },
-    {
-        id: 5,
-        nom: "Les gadgets high tech",
-        prix: 19500,
-        categorie: "technologie",
-        url: "images/un.jpeg",
-        quantite: 0
-    },
-    {
-        id: 6,
-        nom: "Centre de controle",
-        prix: 12500,
-        categorie: "papier peint",
-        url: "images/wallpaper-1.jfif",
-        quantite: 0
-    },
-    {
-        id: 17,
-        nom: "Dark Army",
-        prix: 17000,
-        categorie: "papier peint",
-        url: "images/wallpaper-2.jpeg",
-        quantite: 0
-    },
-    {
-        id: 20,
-        nom: "Champions d'Afrique",
-        prix: 22000,
-        categorie: "papier peint",
-        url: "images/wallpaper-3.jpg",
-        quantite: 0
-    },
-    {
-        id: 21,
-        nom: "Bureau Mac OS",
-        prix: 12000,
-        categorie: "papier peint",
-        url: "images/wallpaper-4.png",
-        quantite: 0
-    },
-    {
-        id: 22,
-        nom: "Bureau Mac OS bleu",
-        prix: 12000,
-        categorie: "papier peint",
-        url: "images/wallpaper-5.jpg",
-        quantite: 0
-    },
-    {
-        id: 23,
-        nom: "Logo Ubuntu",
-        prix: 12000,
-        categorie: "papier peint",
-        url: "images/wallpaper-6.jpg",
-        quantite: 0
-    },
-    {
-        id: 24,
-        nom: "Cyber Task Force",
-        prix: 12000,
-        categorie: "papier peint",
-        url: "images/wallpaper-7.jpg",
-        quantite: 0
-    },
-    {
-        id: 25,
-        nom: "Regard profond",
-        prix: 17500,
-        categorie: "papier peint",
-        url: "images/wallpaper-8.jpg",
-        quantite: 0
-    },
-    {
-        id: 26,
-        nom: "Administrateur",
-        prix: 12000,
-        categorie: "papier peint",
-        url: "images/wallpaper-9.jpg",
-        quantite: 0
-    },
-    {
-        id: 7,
-        nom: "Cybercriminalité",
-        prix: 12000,
-        categorie: "papier peint",
-        url: "images/wallpaper-10.jfif",
-        quantite: 0
+
+class ImageCard {
+    constructor(id, titre, prix, url) {
+        this.id = id;
+        this.titre = titre;
+        this.prix = prix;
+        this.url = url;
+        this.quantite = 0;
     }
-];
 
-const galerie = document.getElementById("galerie");
-
-const ouvrirPanier = document.getElementById("ouvrir-panier");
-const fermerPanier = document.getElementById("fermer-panier");
-
-const fondPanier = document.getElementById("fond-panier");
-const listePanier = document.getElementById("liste-panier");
-
-const nombreArticles = document.getElementById("nombre-articles");
-const totalQuantite = document.getElementById("total-quantite");
-const montantTotal = document.getElementById("montant-total");
-
-function formaterPrix(prix) {
-    return prix.toLocaleString("fr-FR") + " CFA";
-}
-
-// Preferer la boucle for(image of images) {} pour ce traitement
-function afficherImages() {
-    galerie.innerHTML = "";
-
-    for (let i = 0; i < images.length; i++) {
-        const image = images[i];
-        /* Le prof demande de preferer cette methode car l'autre est fastidieuse
-        let htmlCard = `
+    render() {
+        return `
             <article class="carte">
-                <button onclick="modifierQuantite(${image.id}, "ajouter")">+</button>
+                <img src="${this.url}" alt="${this.titre}">
+                <h3>${this.titre}</h3>
+                <p class="prix">${this.prix.toLocaleString("fr-FR")} CFA</p>
+
+                <div class="commandes">
+                    <button data-action="ajouter" data-id="${this.id}">+</button>
+                    <span class="quantite">${this.quantite}</span>
+                    <button data-action="retirer" data-id="${this.id}">-</button>
+                </div>
             </article>
         `;
-        */
-
-        const carte = document.createElement("article");
-        carte.classList.add("carte"); // Utiliser carte.className = "carte"; ainsi que pour les autres
-
-        const photo = document.createElement("img");
-        photo.src = image.url;
-        photo.alt = image.nom;
-
-        const titre = document.createElement("h3");
-        titre.textContent = image.nom;
-
-        const prix = document.createElement("p");
-        prix.classList.add("prix");
-        prix.textContent = formaterPrix(image.prix);
-
-        const commandes = document.createElement("div");
-        commandes.classList.add("commandes"); // Permet de creer un conteneur regroupant les boutons + et - de chaque commande
-
-        // Bouton d'ajout d'elements
-        const boutonPlus = document.createElement("button");
-        boutonPlus.textContent = "+";
-        boutonPlus.addEventListener("click", function() {
-            modifierQuantite(image.id, "ajouter");
-        });
-
-        const quantite = document.createElement("span");
-        quantite.classList.add("quantite");
-        quantite.textContent = image.quantite;
-
-        // Bouton de retrtait d'elements
-        const boutonMoins = document.createElement("button");
-        boutonMoins.textContent = "-";
-
-        boutonMoins.addEventListener("click", function() {
-            modifierQuantite(image.id, "retirer");
-        });
-
-        commandes.appendChild(boutonPlus);
-        commandes.appendChild(quantite);
-        commandes.appendChild(boutonMoins);
-
-        carte.appendChild(photo);
-        carte.appendChild(titre);
-        carte.appendChild(prix);
-        carte.appendChild(commandes);
-
-        galerie.appendChild(carte);
     }
 }
 
-function modifierQuantite(id, action) {
-    for (let i = 0; i < images.length; i++) {
-        if (images[i].id === id) {
-            if (action === "ajouter") {
-                images[i].quantite++;
-            } else if (action === "retirer" && images[i].quantite > 0) {
-                images[i].quantite--;
+
+class ImageCardList {
+    constructor(imageCards) {
+        this.imageCards = imageCards;
+    }
+
+    render() {
+        const galerie = document.getElementById("galerie");
+        galerie.innerHTML = "";
+
+        for (let i = 0; i < this.imageCards.length; i++) {
+            galerie.innerHTML += this.imageCards[i].render();
+        }
+    }
+
+    modifierQuantite(id, action) {
+        for (let i = 0; i < this.imageCards.length; i++) {
+            const image = this.imageCards[i];
+
+            if (image.id === id) {
+                if (action === "ajouter") {
+                    image.quantite++;
+                } else if (action === "retirer" && image.quantite > 0) {
+                    image.quantite--;
+                }
+
+                break;
             }
-            break;
+        }
+
+        this.render();
+        this.actualiserPanier();
+    }
+
+    actualiserPanier() {
+        let quantiteTotale = 0;
+        let prixTotal = 0;
+
+        for (let i = 0; i < this.imageCards.length; i++) {
+            const image = this.imageCards[i];
+
+            quantiteTotale += image.quantite;
+            prixTotal += image.prix * image.quantite;
+        }
+
+        document.getElementById("nombre-articles").textContent = quantiteTotale;
+
+        document.getElementById("total-quantite").textContent = quantiteTotale;
+
+        document.getElementById("montant-total").textContent =
+            prixTotal.toLocaleString("fr-FR") + " CFA";
+
+        this.afficherContenuPanier();
+    }
+
+    afficherContenuPanier() {
+        const listePanier = document.getElementById("liste-panier");
+        listePanier.innerHTML = "";
+
+        let panierVide = true;
+
+        for (let i = 0; i < this.imageCards.length; i++) {
+            const image = this.imageCards[i];
+
+            if (image.quantite > 0) {
+                panierVide = false;
+
+                listePanier.innerHTML += `
+                    <div class="article-panier">
+                        <img src="${image.url}" alt="${image.titre}">
+
+                        <div class="infos-article">
+                            <h3>${image.titre}</h3>
+                            <p>Prix unitaire : ${image.prix.toLocaleString("fr-FR")} CFA</p>
+                            <p>Quantité : ${image.quantite}</p>
+                            <p>Sous-total : ${(image.prix * image.quantite).toLocaleString("fr-FR")} CFA</p>
+                        </div>
+
+                        <div class="commandes">
+                            <button data-action="ajouter" data-id="${image.id}">+</button>
+                            <button data-action="retirer" data-id="${image.id}">-</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        if (panierVide) {
+            listePanier.innerHTML = `
+                <p class="panier-vide">Votre panier est vide.</p>
+            `;
         }
     }
-    afficherImages();
-    actualiserPanier();
 }
 
-function actualiserPanier() {
-    let quantiteTotale = 0;
-    let prixTotal = 0;
 
-    for (let i = 0; i < images.length; i++) {
-        quantiteTotale += images[i].quantite;
+class AfroPixel {
+    constructor(imageCards) {
+        this.galerie = new ImageCardList(imageCards);
 
-        prixTotal += images[i].prix * images[i].quantite;
+        this.fondPanier = document.getElementById("fond-panier");
+        this.boutonOuvrir = document.getElementById("ouvrir-panier");
+        this.boutonFermer = document.getElementById("fermer-panier");
+
+        this.conteneurGalerie = document.getElementById("galerie");
+        this.conteneurPanier = document.getElementById("liste-panier");
     }
 
-    nombreArticles.textContent = quantiteTotale;
-    totalQuantite.textContent = quantiteTotale;
-    montantTotal.textContent = formaterPrix(prixTotal);
+    initialiser() {
+        this.galerie.render();
+        this.galerie.actualiserPanier();
 
-    afficherContenuPanier();
-}
+        this.gererEvenements();
+    }
 
+    gererEvenements() {
+        // Événements des boutons de la galerie
+        this.conteneurGalerie.addEventListener("click", (event) => {
+            this.gererModificationQuantite(event);
+        });
 
-function afficherContenuPanier() {
-    listePanier.innerHTML = "";
+        // Événements des boutons du panier
+        this.conteneurPanier.addEventListener("click", (event) => {
+            this.gererModificationQuantite(event);
+        });
 
-    let panierVide = true;
+        // Ouvrir le panier
+        this.boutonOuvrir.addEventListener("click", () => {
+            this.ouvrirPanier();
+        });
 
-    for (let i = 0; i < images.length; i++) {
-        const image = images[i];
+        // Fermer le panier
+        this.boutonFermer.addEventListener("click", () => {
+            this.fermerPanier();
+        });
 
-        if (image.quantite > 0) {
-            panierVide = false;
+        // Fermer en cliquant sur le fond
+        this.fondPanier.addEventListener("click", (event) => {
+            if (event.target === this.fondPanier) {
+                this.fermerPanier();
+            }
+        });
 
-            const article = document.createElement("div");
-            article.classList.add("article-panier");
+        // Fermer avec la touche Échap
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                this.fermerPanier();
+            }
+        });
+    }
 
-            const photo = document.createElement("img");
-            photo.src = image.url;
-            photo.alt = image.nom;
+    gererModificationQuantite(event) {
+        const bouton = event.target.closest("button");
 
-            const informations = document.createElement("div");
-            informations.classList.add("infos-article");
+        if (bouton && bouton.dataset.action) {
+            const action = bouton.dataset.action;
+            const id = Number(bouton.dataset.id);
 
-            const titre = document.createElement("h3");
-            titre.textContent = image.nom;
-
-            const prix = document.createElement("p");
-            prix.textContent = "Prix unitaire : " + formaterPrix(image.prix);
-
-            const quantite = document.createElement("p");
-            quantite.textContent = "Quantité : " + image.quantite;
-
-            const sousTotal = document.createElement("p");
-
-            sousTotal.textContent = "Sous-total : " + formaterPrix(image.prix * image.quantite);
-
-            const commandes = document.createElement("div");
-            commandes.classList.add("commandes");
-
-            const boutonPlus = document.createElement("button");
-            boutonPlus.textContent = "+";
-            boutonPlus.addEventListener("click", function() {
-                modifierQuantite(image.id, "ajouter");
-            });
-
-            const boutonMoins = document.createElement("button");
-            boutonMoins.textContent = "-";
-            boutonMoins.addEventListener("click", function() {
-                modifierQuantite(image.id, "retirer");
-            });
-
-            commandes.appendChild(boutonPlus);
-            commandes.appendChild(boutonMoins);
-
-            informations.appendChild(titre);
-            informations.appendChild(prix);
-            informations.appendChild(quantite);
-            informations.appendChild(sousTotal);
-
-            article.appendChild(photo);
-            article.appendChild(informations);
-            article.appendChild(commandes);
-
-            listePanier.appendChild(article);
+            this.galerie.modifierQuantite(id, action);
         }
     }
 
-    if (panierVide) {
-        const message = document.createElement("p");
+    ouvrirPanier() {
+        this.fondPanier.classList.add("actif");
+    }
 
-        message.classList.add("panier-vide");
-        message.textContent = "Votre panier est vide.";
-        listePanier.appendChild(message);
+    fermerPanier() {
+        this.fondPanier.classList.remove("actif");
     }
 }
 
-ouvrirPanier.addEventListener("click", function() {
-    fondPanier.classList.add("actif");
-});
 
-fermerPanier.addEventListener("click", function() {
-    fondPanier.classList.remove("actif");
-});
+// Liste des images
+const images = [
+    new ImageCard(1, "Femme noire", 25000, "images/blackness.jpg"),
+    new ImageCard(2, "Girls in Tech", 18000, "images/deux.jpg"),
+    new ImageCard(3, "Femme musulmane", 27500, "images/muslima.jpg"),
+    new ImageCard(4, "Jigeen ci Tech", 20000, "images/trois.jpg"),
+    new ImageCard(5, "Les gadgets high tech", 19500, "images/un.jpeg"),
+    new ImageCard(6, "Centre de controle", 12500, "images/wallpaper-1.jfif"),
+    new ImageCard(17, "Dark Army", 17000, "images/wallpaper-2.jpeg"),
+    new ImageCard(20, "Champions d'Afrique", 22000, "images/wallpaper-3.jpg"),
+    new ImageCard(21, "Bureau Mac OS", 12000, "images/wallpaper-4.png"),
+    new ImageCard(22, "Bureau Mac OS bleu", 12000, "images/wallpaper-5.jpg"),
+    new ImageCard(23, "Logo Ubuntu", 12000, "images/wallpaper-6.jpg"),
+    new ImageCard(24, "Cyber Task Force", 12000, "images/wallpaper-7.jpg"),
+    new ImageCard(25, "Regard profond", 17500, "images/wallpaper-8.jpg"),
+    new ImageCard(26, "Administrateur", 12000, "images/wallpaper-9.jpg"),
+    new ImageCard(7, "Cybercriminalité", 12000, "images/wallpaper-10.jfif")
+];
 
-fondPanier.addEventListener("click", function(event) {
-    if (event.target === fondPanier) {
-        fondPanier.classList.remove("actif");
-    }
-}); // Pour fermer le panier lorsqu'on clique ailleurs.
 
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        fondPanier.classList.remove("actif");
-    }
-}); // Pour fermer le panier lorsqu'on presse sur esc.
-
-afficherImages();
-actualiserPanier();
+// Lancement de l'application
+const application = new AfroPixel(images);
+application.initialiser();
